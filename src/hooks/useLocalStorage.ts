@@ -17,6 +17,11 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       const valueToStore = value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      
+      // Dispatch custom event to notify other components of the change
+      if (key === 'veetracker-user') {
+        window.dispatchEvent(new CustomEvent('userUpdated'));
+      }
     } catch (error) {
       console.error(`Error setting localStorage key "${key}":`, error);
     }
